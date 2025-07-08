@@ -1,0 +1,40 @@
+{{define "title"}} Search Card {{end}}
+
+{{define "main"}}
+
+<div class = "build-deck">
+        <div class = "search-area">
+            <div class = "search-form">
+                <form  style =   "background-color: transparent;" action="/cards/search" method = "POST">
+                    <img class = "search-icon" src="/static/img/search.png" alt="search icon">
+                    <input class = "search-bar" type="text" name = "name" placeholder="Search Card">
+                    <input type="submit" hidden>
+                </form>
+            </div>
+    
+            <div class = "search-results">
+                {{if .Cards}}
+                    {{range .Cards}}
+                    <div class = "card">
+                        <img data-index = {{.ID}} class = "card-image"src={{.Image_uri}} alt={{.Name}}> 
+                        <input class = "add-card" type="image" src="/static/img/add.png">
+                    </div>
+                    {{end}}
+                {{else}}
+                    <div class = "card-placeholder"></div>
+                    <div class = "card-placeholder"></div>
+                    <div class = "card-placeholder"></div>
+                    <div class = "card-placeholder"></div>
+                    <div class = "card-placeholder"></div>
+                    <div class = "card-placeholder"></div>
+                    <div class = "card-placeholder"></div>
+                    <div class = "card-placeholder"></div>
+                    <div class = "card-placeholder"></div>
+                {{end}}
+            </div>
+        </div> 
+
+        <div class = "display-deck"></div>
+</div>
+
+{{end}}

@@ -1,0 +1,32 @@
+{{define "title"}} Sign Up {{end}}
+
+{{define "main"}}
+<div class = "wrapper">
+   <form class = "signup-form" action="/users/signup" method = "POST">
+    <div class = "form-group">
+        <div class = "label-grid">
+            {{with .Form.Errors.name}} <label class = "error">{{.}}</label>{{end}}
+            <label for = "uname">Username: </label>
+        </div>
+        <input type="text" name = "uname"><br>
+    </div>
+    <div class = "form-group">
+        <div class = "label-grid">
+            {{with .Form.Errors.email}} <label class = "error">{{.}}</label>{{end}}
+            <label for="email">Email: </label>
+        </div>
+         <input type="text" name = "email"><br>
+    </div>
+    <div class = "form-group">
+        <div class = "label-grid">
+            {{with .Form.Errors.pass}} <label class = "error">{{.}}</label>{{end}}
+            <label for="pass">Password: </label>
+        </div>
+        <input type="text" name = "pass">
+    </div>
+    <div class = "form-group">
+        <input type="submit" value="start search">
+    </div>
+</form>
+</div>
+{{end}}

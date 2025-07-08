@@ -1,0 +1,25 @@
+{{define "base"}}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+ 
+    <title>{{template "title" .}}</title>
+</head>
+<body>
+    {{template "nav" .}}
+
+    {{with .Flash}}
+    <div class = "flash">{{.}}</div>
+    {{end}}
+    
+    {{template "main" .}}
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
+
+{{end}}
