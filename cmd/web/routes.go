@@ -16,9 +16,9 @@ func (app *application) routes() http.Handler {
 	dynamic := alice.New(app.sessionManager.LoadAndSave)
 	actBefore := alice.New(commonHeaders, app.logRequest)
 
-	mux.Handle("GET /decks/home", dynamic.ThenFunc(app.viewDecks))
+	mux.Handle("GET /home", dynamic.ThenFunc(app.viewDecks))
 	mux.Handle("GET /cards/view/{value}", dynamic.ThenFunc(app.viewCards))
-	mux.Handle("POST /cards/search", dynamic.ThenFunc(app.searchCardsPost))
+	mux.Handle("GET /cards/search/{name}", dynamic.ThenFunc(app.search))
 	mux.Handle("GET /cards/builddeck", dynamic.ThenFunc(app.buildDeck))
 
 	//Routes for user auth

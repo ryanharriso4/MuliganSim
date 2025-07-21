@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -32,20 +33,34 @@ func (app *application) viewCards(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) buildDeck(w http.ResponseWriter, r *http.Request) {
-
 	data := templateData{}
 	app.render(w, r, http.StatusOK, "builddeck.html", data)
 }
 
-func (app *application) searchCardsPost(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
+func (app *application) search(w http.ResponseWriter, r *http.Request) {
+
+	name := r.PathValue("name")
+
+	fmt.Print(name)
+
+	cards, err := app.cards.GetByName(name)
 	if err != nil {
-		app.serverError(w, r, err)
+		app.logger.Error(err.Error())
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
 
-	name := r.PostForm.Get("name")
+	data, err := json.Marshal(cards)
+	if err != nil {
+		app.logger.Error(err.Error())
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
 
-	http.Redirect(w, r, fmt.Sprintf("/cards/view/%s", name), http.StatusSeeOther)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(data)
+
+	/*http.Redirect(w, r, fmt.Sprintf("/cards/view/%s", name), http.StatusSeeOther)*/
 
 }
 

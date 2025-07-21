@@ -5,15 +5,15 @@ import (
 )
 
 type Card struct {
-	ID         int
-	Name       string
-	Image_uri  string
-	Mana_cost  string
-	Type__line string
-	Power      string
-	Toughness  string
-	Ability    string
-	CMC        int
+	ID         int    `json:"id"`
+	Name       string `json:"name"`
+	Image_uri  string `json:"imageuri"`
+	Mana_cost  string `json:"manacost"`
+	Type__line string `json:"typeline"`
+	Power      string `json:"power"`
+	Toughness  string `json:"toughness"`
+	Ability    string `json:"ability"`
+	CMC        int    `json:"cmc"`
 }
 
 type CardModel struct {
