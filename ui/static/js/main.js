@@ -5,6 +5,7 @@ cardSearch.addEventListener('keypress', displaySearch)
 
 async function displaySearch(e){
     if(e.key === 'Enter'){
+        searchResults.innerHTML = '';
         commander = cardSearch.value 
         const queryCommander = await getCardsByName(commander)
         queryCommander.forEach(item => {
