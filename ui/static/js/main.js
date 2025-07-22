@@ -1,5 +1,6 @@
 const cardSearch = document.querySelector("input.search-bar")
 const searchResults = document.querySelector("div.search-results")
+const deckGrid = document.querySelector("div.display-deck")
 cardSearch.addEventListener('keypress', displaySearch)
 
 
@@ -25,6 +26,7 @@ async function displaySearch(e){
             deckAdd.classList.add("add-card") 
             deckAdd.type = "image"
             deckAdd.src = "/static/img/add.png"
+
             deckAdd.addEventListener('click', addToDeck)
 
             card.append(image)
@@ -51,8 +53,9 @@ function addToDeck(e){
     newimg.src = img.src
     newimg.setAttribute("data-index", img.getAttribute("data-index"))
     newimg.setAttribute("alt", img.getAttribute("alt"))
-    buildgrid = document.querySelector("div.display-deck")
-    buildgrid.appendChild(newimg)
+    newimg.width = 146;
+    newimg.height = 204;
+    deckGrid.appendChild(newimg)
    
 }
 
