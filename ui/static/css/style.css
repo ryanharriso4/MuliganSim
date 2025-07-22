@@ -219,13 +219,15 @@ li a:hover{
     margin: 3rem 2rem 2rem 2rem;
     display: grid;
     grid-template-columns: 2fr 1fr;
-    grid-template-areas: "deck deck search";
+    grid-template-rows: auto auto;
+    /*grid-template-areas: "deck deck search";*/
     gap: 10px;
 }
 
 .display-deck{
     display: grid;
-    grid-row-start: 1;
+    grid-row-start: 2;
+    grid-column-start: 1; 
     grid-template-rows: auto auto auto;
     grid-template-columns: auto auto auto auto auto;
     width: 100%;
@@ -234,12 +236,24 @@ li a:hover{
 }
 
 
+.save{
+    grid-row-start: 1;
+    grid-column-start: 2;
+    border: 1px solid whitesmoke;
+}
 
+.nameAndBack{
+    grid-row-start: 1;
+    grid-column-start: 1; 
+    display: inline-block;
+    border: 1px solid whitesmoke;
+}
 
 
 .search-area{
     border: 1px solid whitesmoke;
     grid-column-start: 2;
+    grid-row-start: 2; 
 }
 
 .search-form{
