@@ -12,7 +12,7 @@ async function displaySearch(e){
         queryCommander.forEach(item => {
             //Card Holder DIV   
             const card = document.createElement("div")
-            card.className = "card"
+            card.classList.add("card")
 
             //The Card Image
             const image = document.createElement("img")
@@ -48,6 +48,16 @@ async function getCardsByName(name){
 }
 
 function addToDeck(e){
+
+    //create the card holder
+    const card = document.createElement("div")
+    card.classList.add("card")
+
+    const cardInfo = document.createElement("input")
+    cardInfo.classList.add("card-info") 
+    cardInfo.type = "image"
+    cardInfo.src = "/static/img/moreinfo.png"
+
     img = this.previousElementSibling
     newimg = document.createElement('img')
     newimg.src = img.src
@@ -55,7 +65,10 @@ function addToDeck(e){
     newimg.setAttribute("alt", img.getAttribute("alt"))
     newimg.width = 146;
     newimg.height = 204;
-    deckGrid.appendChild(newimg)
+
+    card.append(cardInfo)
+    card.append(newimg)
+    deckGrid.appendChild(card)
    
 }
 
