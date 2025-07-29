@@ -19,6 +19,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /home", dynamic.ThenFunc(app.viewDecks))
 	mux.Handle("GET /cards/view/{value}", dynamic.ThenFunc(app.viewCards))
 	mux.Handle("GET /cards/search/{name}", dynamic.ThenFunc(app.search))
+	mux.Handle("PUT /cards/save", dynamic.ThenFunc(app.saveDeck))
 	mux.Handle("GET /cards/builddeck", dynamic.ThenFunc(app.buildDeck))
 
 	//Routes for user auth
@@ -26,5 +27,6 @@ func (app *application) routes() http.Handler {
 	mux.Handle("POST /users/signup", dynamic.ThenFunc(app.signupPost))
 	mux.Handle("GET /users/login", dynamic.ThenFunc(app.login))
 	mux.Handle("POST /users/login", dynamic.ThenFunc(app.loginPost))
+	mux.Handle("POST /users/logout", dynamic.ThenFunc(app.logout))
 	return actBefore.Then(mux)
 }

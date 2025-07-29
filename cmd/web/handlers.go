@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"regexp"
 
@@ -62,6 +63,28 @@ func (app *application) search(w http.ResponseWriter, r *http.Request) {
 
 	/*http.Redirect(w, r, fmt.Sprintf("/cards/view/%s", name), http.StatusSeeOther)*/
 
+}
+
+type deckStruct struct {
+	CIndex int   `json:"commander"`
+	Deck   []int `json:"decklist"`
+}
+
+func (app *application) saveDeck(w http.ResponseWriter, r *http.Request) {
+	var deck deckStruct
+	err := decodeJSONBody(w, r, &deck)
+	if err != nil {
+		var mr *malformedRequest
+		if errors.As(err, &mr) {
+			http.Error(w, mr.msg, mr.status)
+		} else {
+			log.Print(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+		return
+	}
+
+	fmt.Print(deck)
 }
 
 type signupForm struct {
@@ -182,4 +205,18 @@ func (app *application) loginPost(w http.ResponseWriter, r *http.Request) {
 	app.sessionManager.Put(r.Context(), "flash", "You successfully logged in!")
 
 	http.Redirect(w, r, "/users/login", http.StatusSeeOther)
+}
+
+func (app *application) logout(w http.ResponseWriter, r *http.Request) {
+	err := app.sessionManager.RenewToken(r.Context())
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	app.sessionManager.Remove(r.Context(), "authenticatedUserID")
+
+	app.sessionManager.Put(r.Context(), "flash", "You've been logged out successfully!")
+
+	http.Redirect(w, r, "/home", http.StatusSeeOther)
 }
