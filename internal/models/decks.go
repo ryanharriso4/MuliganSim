@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 )
 
 type Deck struct {
@@ -22,7 +23,11 @@ func (d *DeckModel) GetUserDecks(id int) ([]Deck, error) {
 	stmt := "select deck_id from user_deck where user_id = ?"
 	rows, err := d.DB.Query(stmt, id)
 	if err != nil {
-		return decks, err
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNoRecord
+		} else {
+			return nil, err
+		}
 	}
 	defer rows.Close()
 
@@ -51,7 +56,11 @@ func (d *DeckModel) GetDeck(id int) (Deck, error) {
 	stmt := "select name, commander_id, cover_img from deck where id = ?;"
 	err := d.DB.QueryRow(stmt, id).Scan(&deck.Name, &deck.Cindex, &deck.Cover_img)
 	if err != nil {
-		return deck, err
+		if errors.Is(err, sql.ErrNoRows) {
+			return Deck{}, ErrNoRecord
+		} else {
+			return Deck{}, err
+		}
 	}
 	deck.DeckID = id
 
