@@ -12,7 +12,18 @@ import (
 )
 
 func (app *application) viewDecks(w http.ResponseWriter, r *http.Request) {
-	data := templateData{}
+	data := templateData{IsAuthenticated: app.isAuthenticated(r)}
+	data.Flash = app.sessionManager.PopString(r.Context(), "flash")
+	userID := app.sessionManager.GetInt(r.Context(), "authenticatedUserID")
+
+	fmt.Println(userID)
+
+	decks, err := app.decks.GetUserDecks(userID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	data.Decks = decks
 	app.render(w, r, http.StatusOK, "home.html", data)
 }
 
@@ -25,16 +36,18 @@ func (app *application) viewCards(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := templateData{
-		Search: value,
-		Cards:  cards,
+		Search:          value,
+		Cards:           cards,
+		IsAuthenticated: app.isAuthenticated(r),
 	}
 
 	app.render(w, r, http.StatusOK, "builddeck.html", data)
-
 }
 
 func (app *application) buildDeck(w http.ResponseWriter, r *http.Request) {
-	data := templateData{}
+	data := templateData{IsAuthenticated: app.isAuthenticated(r)}
+	//value, err := strconv.Atoi(r.PathValue("deckID"))
+
 	app.render(w, r, http.StatusOK, "builddeck.html", data)
 }
 
@@ -65,13 +78,10 @@ func (app *application) search(w http.ResponseWriter, r *http.Request) {
 
 }
 
-type deckStruct struct {
-	CIndex int   `json:"commander"`
-	Deck   []int `json:"decklist"`
-}
+var deckNameReg = regexp.MustCompile(`^[A-Za-z0-9'\s]+$`)
 
 func (app *application) saveDeck(w http.ResponseWriter, r *http.Request) {
-	var deck deckStruct
+	var deck models.Deck
 	err := decodeJSONBody(w, r, &deck)
 	if err != nil {
 		var mr *malformedRequest
@@ -84,7 +94,12 @@ func (app *application) saveDeck(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Print(deck)
+	if !deckNameReg.MatchString(deck.Name) {
+		log.Print("Bad Input")
+		http.Error(w, "Invalid Deck Name", http.StatusBadRequest)
+	}
+
+	//app.decks.SaveDeckChanges(deck)
 }
 
 type signupForm struct {
@@ -95,7 +110,7 @@ type signupForm struct {
 }
 
 func (app *application) signup(w http.ResponseWriter, r *http.Request) {
-	data := templateData{}
+	data := templateData{IsAuthenticated: app.isAuthenticated(r)}
 	data.Form = signupForm{}
 	app.render(w, r, http.StatusOK, "signup.html", data)
 
@@ -157,7 +172,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	form := loginForm{
 		Errors: map[string]string{},
 	}
-	data := templateData{Form: form}
+	data := templateData{Form: form, IsAuthenticated: app.isAuthenticated(r)}
 	data.Flash = app.sessionManager.PopString(r.Context(), "flash")
 	app.render(w, r, http.StatusOK, "login.html", data)
 }
@@ -201,10 +216,10 @@ func (app *application) loginPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.sessionManager.Put(r.Context(), "authenicateUserId", id)
+	app.sessionManager.Put(r.Context(), "authenticatedUserID", id)
 	app.sessionManager.Put(r.Context(), "flash", "You successfully logged in!")
 
-	http.Redirect(w, r, "/users/login", http.StatusSeeOther)
+	http.Redirect(w, r, "/home", http.StatusSeeOther)
 }
 
 func (app *application) logout(w http.ResponseWriter, r *http.Request) {
@@ -218,5 +233,5 @@ func (app *application) logout(w http.ResponseWriter, r *http.Request) {
 
 	app.sessionManager.Put(r.Context(), "flash", "You've been logged out successfully!")
 
-	http.Redirect(w, r, "/home", http.StatusSeeOther)
+	http.Redirect(w, r, "/users/login", http.StatusSeeOther)
 }

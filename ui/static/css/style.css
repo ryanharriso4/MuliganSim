@@ -18,13 +18,33 @@ input, button, select, textarea {
     font: inherit;
 }
 
+@keyframes fade {
+    from {opacity: 1; visibility: visible;}
+    to {opacity: 0; visibility: hidden;}
+}
+
 .flash{
-    margin:auto; 
-    margin-top: 2rem;
+    position: fixed; 
+    left: 50%;
+    top: 0%; 
+    translate: -50% 2.5rem;
+    width: max(200px, 20%);
     padding: 1rem;
     background-color: #EEEEEE;
     color: black;
+    border-radius: .5rem;
+    text-align: center;
+    display: inline-block;
+    align-items: center;
+    overflow: hidden;
+    animation: fade 3s ease-in forwards;
 }
+
+.flash p{
+    background: #EEEEEE;
+    color: black;
+}
+
 
 
 /* Navbar code */
@@ -44,6 +64,15 @@ ul{
     height: 2rem;
 }
 
+.nav-right{
+    float: right; 
+    margin-right: 2rem;
+}
+
+.nav-left{
+    margin-left: 1rem;
+}
+
 li {
     display: inline;
     float: left; 
@@ -54,12 +83,31 @@ li a {
     padding: 8px;
     background-color: #31363F;
     text-align: center;
+    border: none;
+    text-decoration: none;
+}
+
+li form{
+    display: block;
+    padding: 8px;
+    background-color: #31363F;
+    text-align: center;
 }
 
 li a:hover{
     opacity: 70%;
 }
 
+.logout{
+    background-color: #31363F;
+    border: none; 
+    outline: none;
+    text-align: center;
+}
+
+.logout:hover{
+    opacity: 70%;
+}
 
 
 
@@ -77,7 +125,7 @@ li a:hover{
     display: grid; 
     background-color: #31363F;
     margin: auto;
-    width: 20%; 
+    width: max(300px,20%); 
     height: 40%;
     border-radius: .5em;
     padding: 1rem;
@@ -98,7 +146,7 @@ li a:hover{
     display: grid;
     grid-template-rows: auto auto auto;
     margin: auto;
-    width: 20%;
+    width:  max(300px,20%);
     height: 20%;
     border-radius: .5em;
     padding: 1rem;

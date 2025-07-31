@@ -8,11 +8,13 @@ import (
 )
 
 type templateData struct {
-	Search string
-	Cards  []models.Card
-	User   models.User
-	Form   any
-	Flash  string
+	Search          string
+	Cards           []models.Card
+	Decks           []models.Deck
+	User            models.User
+	Form            any
+	Flash           string
+	IsAuthenticated bool
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {

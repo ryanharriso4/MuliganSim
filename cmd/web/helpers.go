@@ -100,3 +100,7 @@ func decodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) err
 	}
 	return nil
 }
+
+func (app *application) isAuthenticated(r *http.Request) bool {
+	return app.sessionManager.Exists(r.Context(), "authenticatedUserID")
+}

@@ -2,10 +2,11 @@ const cardSearch = document.querySelector("input.search-bar")
 const searchResults = document.querySelector("div.search-results")
 const deckGrid = document.querySelector("div.display-deck")
 const save = document.querySelector("button.save")
+
+
 cardSearch.addEventListener('keypress', displaySearch)
 deckGrid.addEventListener('click', deckClick)
 save.addEventListener('click', saveDeck)
-
 
 async function displaySearch(e){
     if(e.key === 'Enter'){
@@ -118,6 +119,7 @@ function deckClick(e){
 async function saveDeck(e){
     const deckGrid = document.querySelector('.display-deck')
     const items = deckGrid.querySelectorAll('div.card:not(.commander)')
+    const deckName = document.querySelector('input.deck-name')
 
     
     const itemIndexes = [...items].map(item => (item.getAttribute("data-index")))
@@ -133,9 +135,12 @@ async function saveDeck(e){
         }
     }
 
+
+
     const deckInfo = {
         'commander': comIndex, 
         'decklist': itemIndexsNumeric, 
+        'deckName':deckName.value,
     }; 
 
     try{

@@ -3,20 +3,29 @@
 {{define "main"}}
 <div class = "home-wrapper">
    <div class = "deck-view">
-      <!--<form class = "add-deck" action="/users/createdeck" method = "POST">
-         <img src="/static/img/deckadd.png" alt="Plus Icon">
-         <input type="submit" value = "">
-      </form> -->
-
-      <a class = "add-deck" href="/cards/builddeck">
+      <a class = "add-deck" href="/cards/builddeck/-1">
          <img src="/static/img/deckadd.png" alt="Plus Icon">
       </a>
-      <div class = "home-cards">
+
+      {{if .Decks}}
+         {{range .Decks}}
+            <div class = "home-cards">
+               <img class = "hc-img" src= {{.Cover_img}} alt={{.Name}}>
+               <div class = "hc-info">
+                  <p>Zurgo Deck</p>
+               </div>
+            </div>
+         {{end}}
+      {{end}}
+
+
+      <!-- <div class = "home-cards">
          <img class = "hc-img" src="https://cards.scryfall.io/art_crop/front/d/c/dc8eb325-75c9-4331-830d-3f7d62d77290.jpg?1745970988" alt="zurgo alt">
          <div class = "hc-info">
             <p>Zurgo Deck</p>
          </div>
-      </div>
+      </div> -->
+
 
    </div>
 </div>

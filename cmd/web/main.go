@@ -20,6 +20,7 @@ type application struct {
 	logger         *slog.Logger
 	cards          *models.CardModel
 	users          *models.UserModel
+	decks          *models.DeckModel
 	sessionManager *scs.SessionManager
 	templateCache  map[string]*template.Template
 }
@@ -58,6 +59,7 @@ func main() {
 		logger:         logger,
 		cards:          &models.CardModel{DB: db},
 		users:          &models.UserModel{DB: db},
+		decks:          &models.DeckModel{DB: db},
 		sessionManager: sessionManager,
 		templateCache:  templateCache,
 	}
