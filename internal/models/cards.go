@@ -5,15 +5,16 @@ import (
 )
 
 type Card struct {
-	ID         int    `json:"id"`
-	Name       string `json:"name"`
-	Image_uri  string `json:"imageuri"`
-	Mana_cost  string `json:"manacost"`
-	Type__line string `json:"typeline"`
-	Power      string `json:"power"`
-	Toughness  string `json:"toughness"`
-	Ability    string `json:"ability"`
-	CMC        int    `json:"cmc"`
+	ID          int    `json:"id"`
+	Name        string `json:"name"`
+	Image_uri   string `json:"imageuri"`
+	Cropped_uri string `json:"croppeduri"`
+	Mana_cost   string `json:"manacost"`
+	Type__line  string `json:"typeline"`
+	Power       string `json:"power"`
+	Toughness   string `json:"toughness"`
+	Ability     string `json:"ability"`
+	CMC         int    `json:"cmc"`
 }
 
 type CardModel struct {
@@ -24,7 +25,7 @@ func (c *CardModel) GetByName(name string) ([]Card, error) {
 
 	var cards []Card
 
-	stmt := "select name, id, image_url from cardlist where name like '" + name + "%'"
+	stmt := "select name, id, image_url from cardlist where name like '%" + name + "%'"
 	rows, err := c.DB.Query(stmt)
 
 	if err != nil {

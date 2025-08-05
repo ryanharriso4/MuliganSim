@@ -9,24 +9,14 @@
 
       {{if .Decks}}
          {{range .Decks}}
-            <div class = "home-cards">
+            <a class = "home-cards" href = "/cards/builddeck/{{.DeckID}}">
                <img class = "hc-img" src= {{.Cover_img}} alt={{.Name}}>
                <div class = "hc-info">
-                  <p>Zurgo Deck</p>
+                  <p>{{.Name}}</p>
                </div>
-            </div>
+            </a>
          {{end}}
       {{end}}
-
-
-      <!-- <div class = "home-cards">
-         <img class = "hc-img" src="https://cards.scryfall.io/art_crop/front/d/c/dc8eb325-75c9-4331-830d-3f7d62d77290.jpg?1745970988" alt="zurgo alt">
-         <div class = "hc-info">
-            <p>Zurgo Deck</p>
-         </div>
-      </div> -->
-
-
    </div>
 </div>
 

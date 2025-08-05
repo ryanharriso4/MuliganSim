@@ -3,10 +3,23 @@ const searchResults = document.querySelector("div.search-results")
 const deckGrid = document.querySelector("div.display-deck")
 const save = document.querySelector("button.save")
 
+const deckAdd = []
+const deckRemove = []
 
-cardSearch.addEventListener('keypress', displaySearch)
-deckGrid.addEventListener('click', deckClick)
-save.addEventListener('click', saveDeck)
+if (cardSearch != null) {
+    cardSearch.addEventListener('keypress', displaySearch)
+}
+
+if (deckGrid != null){
+    deckGrid.addEventListener('click', deckClick)
+}
+
+if (save != null){
+    save.addEventListener('click', saveDeck)
+}
+
+ 
+
 
 async function displaySearch(e){
     if(e.key === 'Enter'){
@@ -70,6 +83,20 @@ async function getCardsByName(name){
 
 function addToDeck(e){
 
+
+    const di = Number(this.parentNode.getAttribute("data-index"))
+    if (di == NaN){
+        return
+    }
+
+
+    if (deckGrid.querySelector(`div.card[data-index='${di}']`) != null){
+        return
+
+    }
+
+
+
     //create the card holder
     const card = document.createElement("div")
     card.setAttribute("data-index", this.parentNode.getAttribute("data-index"))
@@ -96,15 +123,44 @@ function addToDeck(e){
     card.append(commander)
     card.append(newimg)
     deckGrid.appendChild(card)
+
+    
+    
+    deckAdd.push(di)
    
 }
 
 function deckClick(e){
     if (e.target.className === "delete-card"){
+        const value = Number(e.target.parentNode.getAttribute("data-index"))
+
+        if (value == NaN) {
+            return 
+        }
+
+        const index = deckAdd.indexOf(value)
+        if (index != -1){
+            console.log(deckAdd)
+            addToDeck = deckAdd.splice(index, 1)
+            console.log(deckAdd)
+        } else {
+            deckRemove.push(value)
+        }
+
+        
+
         e.target.parentNode.remove()
     } else if (e.target.className === "make-commander"){
         const previousCom = document.querySelector("div.commander")
         if (previousCom != null){
+            let comIndex = 0
+            let temp = previousCom.getAttribute("data-index")
+            comIndex = parseInt(temp)
+            if (isNaN(comIndex)){
+                comIndex = 0
+            }
+            
+            deckAdd.push(comIndex)
             previousCom.classList.remove("commander")
         }else{
             console.log("not found")
@@ -112,6 +168,28 @@ function deckClick(e){
         
         const card = e.target.parentNode;
         card.classList.add("commander")
+
+        let comIndex = 0
+        if (card != null){
+            let comIndex = 0
+            let temp = card.getAttribute("data-index")
+            comIndex = parseInt(temp)
+            if (isNaN(comIndex)){
+                comIndex = 0
+            }
+
+            const index = deckAdd.indexOf(comIndex)
+            if (index != -1){
+                addToDeck = deckAdd.splice(index, 1)
+            }
+
+            const ComBeforeCom = deckGrid.querySelector("div.card[data-index='${comIndex}']")
+            if (ComBeforeCom != null){
+                deckGrid.remove(ComBeforeCom)
+            }
+
+            
+        }
     }
     
 }
@@ -135,11 +213,23 @@ async function saveDeck(e){
         }
     }
 
+    let dID = deckGrid.getAttribute("data-index")
+    if (dID == null){
+        window.alert("Invalid DeckID")
+    } 
+
+    let dIDNum = Number(dID)
+    if (dIDNum == NaN){
+        return
+    }
+
 
 
     const deckInfo = {
+        'deckID': dIDNum,
         'commander': comIndex, 
-        'decklist': itemIndexsNumeric, 
+        'addToDeck': deckAdd, 
+        'removeFromDeck': deckRemove, 
         'deckName':deckName.value,
     }; 
 
@@ -152,11 +242,15 @@ async function saveDeck(e){
         body: JSON.stringify(deckInfo), 
         });
         if (!response.ok){
-            console.log("Not Cool Man!")
+            window.alert("Bad Request")
         }
+
+        resp = await response.json()
+        deckGrid.setAttribute("data-index", resp.id)
     }catch(error){
-        console.log("Hello")
+        window.alert(error)
     }
 
 }
+
 

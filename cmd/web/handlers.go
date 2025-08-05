@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"strconv"
 
 	"muligansim.ryanharris.net/internal/models"
 )
@@ -16,23 +17,23 @@ func (app *application) viewDecks(w http.ResponseWriter, r *http.Request) {
 	data.Flash = app.sessionManager.PopString(r.Context(), "flash")
 	userID := app.sessionManager.GetInt(r.Context(), "authenticatedUserID")
 
-	fmt.Println(userID)
-
 	decks, err := app.decks.GetUserDecks(userID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
 	data.Decks = decks
+
 	app.render(w, r, http.StatusOK, "home.html", data)
 }
 
 func (app *application) viewCards(w http.ResponseWriter, r *http.Request) {
 
 	value := r.PathValue("value")
+
 	cards, err := app.cards.GetByName(value)
 	if err != nil {
-		app.logger.Error(err.Error())
+		app.serverError(w, r, err)
 	}
 
 	data := templateData{
@@ -46,7 +47,22 @@ func (app *application) viewCards(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) buildDeck(w http.ResponseWriter, r *http.Request) {
 	data := templateData{IsAuthenticated: app.isAuthenticated(r)}
-	//value, err := strconv.Atoi(r.PathValue("deckID"))
+	deckID, err := strconv.Atoi(r.PathValue("deckID"))
+	if err != nil {
+		app.serverError(w, r, err)
+	}
+
+	if deckID != -1 {
+		deck, err := app.decks.GetDeckWithCards(deckID)
+		if err != nil {
+			if errors.Is(err, models.ErrNoRecord) {
+				app.serverError(w, r, err)
+			}
+		}
+		data.Deck = deck
+	} else {
+		data.Deck.DeckID = -1
+	}
 
 	app.render(w, r, http.StatusOK, "builddeck.html", data)
 }
@@ -78,11 +94,15 @@ func (app *application) search(w http.ResponseWriter, r *http.Request) {
 
 }
 
+type saveID struct {
+	Id int `json:"id"`
+}
+
 var deckNameReg = regexp.MustCompile(`^[A-Za-z0-9'\s]+$`)
 
 func (app *application) saveDeck(w http.ResponseWriter, r *http.Request) {
-	var deck models.Deck
-	err := decodeJSONBody(w, r, &deck)
+	var save models.SaveDeck
+	err := decodeJSONBody(w, r, &save)
 	if err != nil {
 		var mr *malformedRequest
 		if errors.As(err, &mr) {
@@ -94,12 +114,31 @@ func (app *application) saveDeck(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !deckNameReg.MatchString(deck.Name) {
+	if !deckNameReg.MatchString(save.Name) && save.Name != "" {
 		log.Print("Bad Input")
 		http.Error(w, "Invalid Deck Name", http.StatusBadRequest)
+		return
 	}
 
-	//app.decks.SaveDeckChanges(deck)
+	id := app.sessionManager.GetInt(r.Context(), "authenticatedUserID")
+
+	deck := saveID{}
+	deck.Id, err = app.decks.SaveDeckChanges(r.Context(), save, id)
+	if err != nil {
+		app.logger.Error(err.Error())
+		return
+	}
+
+	data, err := json.Marshal(deck)
+	if err != nil {
+		app.logger.Error(err.Error())
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(data)
+
 }
 
 type signupForm struct {
