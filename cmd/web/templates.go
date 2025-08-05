@@ -11,6 +11,7 @@ type templateData struct {
 	Search          string
 	Cards           []models.Card
 	Decks           []models.Deck
+	Deck            models.Deck
 	User            models.User
 	Form            any
 	Flash           string
