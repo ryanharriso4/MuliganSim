@@ -13,15 +13,27 @@ import (
 )
 
 func (app *application) viewDecks(w http.ResponseWriter, r *http.Request) {
+	// data := templateData{IsAuthenticated: app.isAuthenticated(r)}
+	// data.Flash = app.sessionManager.PopString(r.Context(), "flash")
+	// userID := app.sessionManager.GetInt(r.Context(), "authenticatedUserID")
+
+	// decks, err := app.decks.GetUserDecks(userID)
+
+	// if errors.Is(err, models.ErrNoRecord) {
+	// 	app.render(w, r, http.StatusOK, "home.html", data)
+	// } else if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+	// }
+
+	// data.Decks = decks
+
+	// app.render(w, r, http.StatusOK, "home.html", data)
 	data := templateData{IsAuthenticated: app.isAuthenticated(r)}
 	data.Flash = app.sessionManager.PopString(r.Context(), "flash")
 	userID := app.sessionManager.GetInt(r.Context(), "authenticatedUserID")
 
 	decks, err := app.decks.GetUserDecks(userID)
-
-	if errors.Is(err, models.ErrNoRecord) {
-		app.render(w, r, http.StatusOK, "home.html", data)
-	} else if err != nil {
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
