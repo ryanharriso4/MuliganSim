@@ -18,21 +18,16 @@ func (app *application) viewDecks(w http.ResponseWriter, r *http.Request) {
 	userID := app.sessionManager.GetInt(r.Context(), "authenticatedUserID")
 
 	decks, err := app.decks.GetUserDecks(userID)
-	if err == nil {
-		data.Decks = decks
+
+	if errors.Is(err, models.ErrNoRecord) {
 		app.render(w, r, http.StatusOK, "home.html", data)
-	} else if errors.Is(err, models.ErrNoRecord) {
-		app.render(w, r, http.StatusOK, "home.html", data)
-	} else {
+	} else if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-<<<<<<< HEAD
-=======
 	data.Decks = decks
 
 	app.render(w, r, http.StatusOK, "home.html", data)
->>>>>>> working
 }
 
 func (app *application) viewCards(w http.ResponseWriter, r *http.Request) {
