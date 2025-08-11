@@ -306,7 +306,7 @@ li a:hover{
     gap: 10px;
 }
 
-.nameAndBack a{
+.deckBuildBack{
     width: 30px;
     height: 30px;
     border-radius: 1rem;

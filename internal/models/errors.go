@@ -11,5 +11,5 @@ var (
 	// tries to signup with an email address that's already in use.
 	ErrDuplicateEmail = errors.New("models: duplicate email")
 
-	ErrInvalidDeckID = errors.New("models: invalid deck id")
+	ErrInvalidDeckID = errors.New("decks: invalid id")
 )
