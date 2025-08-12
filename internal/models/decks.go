@@ -122,7 +122,7 @@ func (d *DeckModel) GetDeckWithCards(id int) (Deck, error) {
 		deck.Cover_img = cover_img.String
 	}
 
-	stmt = "select CL.id, CL.name, image_url, mana_cost, type_line,power, toughness, ability, cmc, croppedimage_url  from cardlist as CL join deck_card as DC on CL.id = DC.card_id join deck as D on DC.deck_id = D.id where D.id = ?;"
+	stmt = "select CL.id, CL.name, medimage_url, mana_cost, type_line,power, toughness, ability, cmc, croppedimage_url  from cardlist as CL join deck_card as DC on CL.id = DC.card_id join deck as D on DC.deck_id = D.id where D.id = ?;"
 	rows, err := d.DB.Query(stmt, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -147,7 +147,7 @@ func (d *DeckModel) GetDeckWithCards(id int) (Deck, error) {
 	}
 
 	var card Card
-	stmt = "select CL.id, CL.name, image_url, mana_cost, type_line,power, toughness, ability, cmc, croppedimage_url from cardlist as CL, deck as D where D.commander_id = CL.id and D.id = ?"
+	stmt = "select CL.id, CL.name, medimage_url, mana_cost, type_line,power, toughness, ability, cmc, croppedimage_url from cardlist as CL, deck as D where D.commander_id = CL.id and D.id = ?"
 	err = d.DB.QueryRow(stmt, id).Scan(&card.ID, &card.Name, &card.Image_uri, &card.Mana_cost, &card.Type__line, &card.Power, &card.Toughness, &card.Ability, &card.CMC, &card.Cropped_uri)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {

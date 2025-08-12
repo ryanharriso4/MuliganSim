@@ -6,6 +6,27 @@ const save = document.querySelector("button.save")
 const deckAdd = []
 const deckRemove = []
 
+const lazyLoad = target => {
+    const io = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            console.log("hello world")
+
+            if (entry.isIntersecting){
+                const img = entry.target
+                const src = img.getAttribute('data-src')
+
+                img.setAttribute('src', src)
+
+                observer.disconnect()
+            }
+        })
+    })
+    io.observe(target)
+}
+
+const cards = deckGrid.querySelectorAll(".deck-card-image")
+cards.forEach(lazyLoad)
+
 if (cardSearch != null) {
     cardSearch.addEventListener('keypress', displaySearch)
 }
@@ -19,6 +40,7 @@ if (save != null){
 }
 
  
+
 
 
 async function displaySearch(e){
@@ -42,8 +64,9 @@ async function displaySearch(e){
                 //The Card Image
                 const image = document.createElement("img")
                 image.classList.add("card-image")  
-                image.src = item.imageuri
+                image.setAttribute("data-src", item.imageuri)
                 image.alt = item.name
+                lazyLoad(image)
 
                 //Button for adding card to deck
                 const deckAdd = document.createElement("input")
@@ -55,6 +78,7 @@ async function displaySearch(e){
 
                 card.append(image)
                 card.append(deckAdd)
+
 
                 searchResults.append(card)
         })
@@ -90,7 +114,7 @@ function addToDeck(e){
     }
 
 
-    if (deckGrid.querySelector(`div.card[data-index='${di}']`) != null){
+    if (deckGrid.querySelector(`div.deck-card[data-index='${di}']`) != null){
         return
 
     }
@@ -100,7 +124,7 @@ function addToDeck(e){
     //create the card holder
     const card = document.createElement("div")
     card.setAttribute("data-index", this.parentNode.getAttribute("data-index"))
-    card.classList.add("card")
+    card.classList.add("deck-card")
 
     const del = document.createElement("input")
     del.classList.add("delete-card") 
@@ -118,10 +142,12 @@ function addToDeck(e){
     newimg.setAttribute("alt", img.getAttribute("alt"))
     newimg.width = 146;
     newimg.height = 204;
+    newimg.classList.add("deck-card-image")
 
     card.append(del)
     card.append(commander)
     card.append(newimg)
+    lazyLoad(card)
     deckGrid.appendChild(card)
 
     
@@ -183,7 +209,7 @@ function deckClick(e){
                 addToDeck = deckAdd.splice(index, 1)
             }
 
-            const ComBeforeCom = deckGrid.querySelector("div.card[data-index='${comIndex}']")
+            const ComBeforeCom = deckGrid.querySelector("div.deck-card[data-index='${comIndex}']")
             if (ComBeforeCom != null){
                 deckGrid.remove(ComBeforeCom)
             }
@@ -196,7 +222,7 @@ function deckClick(e){
 
 async function saveDeck(e){
     const deckGrid = document.querySelector('.display-deck')
-    const items = deckGrid.querySelectorAll('div.card:not(.commander)')
+    const items = deckGrid.querySelectorAll('div.deck-card:not(.commander)')
     const deckName = document.querySelector('input.deck-name')
 
     

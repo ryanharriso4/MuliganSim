@@ -291,6 +291,26 @@ li a:hover{
     gap: 5px;
 }
 
+.deck-card{
+    position: relative;
+    /* width: 146px;
+    height: 204px;  */
+    width: 292px;
+    height: 408px;
+    border-radius: .5em;
+    overflow: hidden;
+}
+
+.deck-card-image{
+    display: block;
+    /* width: 146px;
+    height: 204px;  */
+    width: 292px;
+    height: 408px;
+}
+
+
+
 
 .save{
     grid-row-start: 1;
@@ -382,13 +402,15 @@ input:focus{
 .card{
     position: relative;
     width: 146px;
-    height: 204px;
+    height: 204px; 
     border-radius: .5em;
     overflow: hidden;
 }
 
 .card-image{
     display: block;
+    width: 146px;
+    height: 204px; 
 }
 
 .add-card{

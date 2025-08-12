@@ -20,7 +20,7 @@
                 {{if .Cards}}
                     {{range .Cards}}
                     <div class = "card">
-                        <img data-index = {{.ID}} class = "card-image"src={{.Image_uri}} alt={{.Name}}> 
+                        <img data-index = {{.ID}} class = "card-image"src="" data-src = {{.Image_uri}} alt={{.Name}}> 
                         <input class = "add-card" type="image" src="/static/img/add.png">
                     </div>
                     {{end}}
@@ -48,15 +48,15 @@
             {{if and (.Deck) (not (eq .Deck.DeckID -1))}}
 
                 {{if and .Deck.Commander (not (eq .Deck.Cindex -1) )}}
-                    <div  class = "card commander" data-index = {{.Deck.Commander.ID}}>
-                        <img  class = "card-image"src={{.Deck.Commander.Image_uri}} alt={{.Deck.Commander.Name}}> 
+                    <div  class = "deck-card commander" data-index = {{.Deck.Commander.ID}}>
+                        <img  class = "deck-card-image"src="" data-src = {{.Deck.Commander.Image_uri}}  alt={{.Deck.Commander.Name}}> 
                         <input class = "delete-card" type="image" src="/static/img/remove.png">
                         <input class = "make-commander" type="image" src="/static/img/commander.png">
                     </div>
                 {{end}}
                 {{range .Deck.Cards}}
-                    <div  class = "card" data-index = {{.ID}}>
-                        <img  class = "card-image"src={{.Image_uri}} alt={{.Name}}> 
+                    <div  class = "deck-card" data-index = {{.ID}}>
+                        <img  class = "deck-card-image"src="" data-src={{.Image_uri}} alt={{.Name}}> 
                         <input class = "delete-card" type="image" src="/static/img/remove.png">
                         <input class = "make-commander" type="image" src="/static/img/commander.png">
                     </div>
