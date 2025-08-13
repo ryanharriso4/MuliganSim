@@ -288,26 +288,44 @@ li a:hover{
     flex-wrap: wrap;
     flex-direction: row;
     height: 88vh;
-    gap: 5px;
+    row-gap: 10px;
+}
+
+.display-deck-divider{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.display-deck-segment{
+    display: flex; 
+    width: 100%;
+    height:fit-content;
+    flex-wrap: wrap;
+    flex-direction: row;
+    column-gap: 10px;
+    row-gap: 5px;
+    margin: 5px 0 0 5px;
+    /* justify-content: center; */
 }
 
 .deck-card{
     position: relative;
     /* width: 146px;
     height: 204px;  */
-    width: 292px;
-    height: 408px;
+    width: 244px;
+    height: 340px;
     border-radius: .5em;
     overflow: hidden;
 }
 
 .deck-card-image{
     display: block;
-    /* width: 146px;
+    /*width: 146px;
     height: 204px;  */
-    width: 292px;
-    height: 408px;
+    width: 244px;
+    height: 340px;
 }
+
 
 
 

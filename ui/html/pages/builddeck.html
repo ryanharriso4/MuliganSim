@@ -17,24 +17,6 @@
             </div>
     
             <div class = "search-results">
-                {{if .Cards}}
-                    {{range .Cards}}
-                    <div class = "card">
-                        <img data-index = {{.ID}} class = "card-image"src="" data-src = {{.Image_uri}} alt={{.Name}}> 
-                        <input class = "add-card" type="image" src="/static/img/add.png">
-                    </div>
-                    {{end}}
-                {{else}}
-                    <div class = "card-placeholder"></div>
-                    <div class = "card-placeholder"></div>
-                    <div class = "card-placeholder"></div>
-                    <div class = "card-placeholder"></div>
-                    <div class = "card-placeholder"></div>
-                    <div class = "card-placeholder"></div>
-                    <div class = "card-placeholder"></div>
-                    <div class = "card-placeholder"></div>
-                    <div class = "card-placeholder"></div>
-                {{end}}
             </div>
         </div> 
 
@@ -47,20 +29,33 @@
         <div class = "display-deck" data-index="{{.Deck.DeckID}}">
             {{if and (.Deck) (not (eq .Deck.DeckID -1))}}
 
-                {{if and .Deck.Commander (not (eq .Deck.Cindex -1) )}}
+                 {{if and .Deck.Commander (not (eq .Deck.Cindex -1) )}}
                     <div  class = "deck-card commander" data-index = {{.Deck.Commander.ID}}>
                         <img  class = "deck-card-image"src="" data-src = {{.Deck.Commander.Image_uri}}  alt={{.Deck.Commander.Name}}> 
                         <input class = "delete-card" type="image" src="/static/img/remove.png">
                         <input class = "make-commander" type="image" src="/static/img/commander.png">
                     </div>
-                {{end}}
-                {{range .Deck.Cards}}
-                    <div  class = "deck-card" data-index = {{.ID}}>
-                        <img  class = "deck-card-image"src="" data-src={{.Image_uri}} alt={{.Name}}> 
-                        <input class = "delete-card" type="image" src="/static/img/remove.png">
-                        <input class = "make-commander" type="image" src="/static/img/commander.png">
+                {{end}} 
+
+                
+
+                {{range $key, $value := .Deck.Cards}}
+                    <div class = "display-deck-divider">
+                    <p>{{$key}}</p>
+                    <div class = "display-deck-segment">
+                        {{range $key2, $value2 := $value}}
+                            <div  class = "deck-card" data-index = {{$value2.ID}}>
+                                <img  class = "deck-card-image"src="" data-src = {{$value2.Image_uri}}  alt={{$value2.Name}}> 
+                                <input class = "delete-card" type="image" src="/static/img/remove.png">
+                                <input class = "make-commander" type="image" src="/static/img/commander.png">
+                            </div>
+                        {{end}}
+                    </div>
                     </div>
                 {{end}}
+
+                </div>
+                
             {{end}}
         </div>
 </div>

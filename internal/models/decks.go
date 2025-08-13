@@ -9,13 +9,13 @@ import (
 )
 
 type Deck struct {
-	DeckID    int    `json:"deckID"`
-	Cindex    int    `json:"commander"`
-	Cover_img string `json:"coverimg"`
-	Deck_IDS  []int  `json:"decklist"`
-	Cards     []Card `json:"cards"`
+	DeckID    int
+	Cindex    int
+	Cover_img string
+	Deck_IDS  []int
+	Cards     map[string][]Card
 	Commander Card
-	Name      string `json:"deckName"`
+	Name      string
 }
 
 type SaveDeck struct {
@@ -154,7 +154,6 @@ func (d *DeckModel) GetDeckWithCards(id int) (Deck, error) {
 				return deck, err
 			}
 		}
-		deck.Cards = append(deck.Cards, card)
 
 		switch {
 		case strings.Contains(card.Type__line, "Creature"):
@@ -176,13 +175,7 @@ func (d *DeckModel) GetDeckWithCards(id int) (Deck, error) {
 		// cardMap[card.Type__line] = append(cardMap[card.Type__line], card)
 	}
 
-	for k, v := range cardMap {
-		fmt.Print(k + " ")
-		for _, v2 := range v {
-			fmt.Print(v2.Name + ", ")
-		}
-		fmt.Println("\n")
-	}
+	deck.Cards = cardMap
 
 	var card Card
 	stmt = "select CL.id, CL.name, medimage_url, mana_cost, type_line,power, toughness, ability, cmc, croppedimage_url from cardlist as CL, deck as D where D.commander_id = CL.id and D.id = ?"
