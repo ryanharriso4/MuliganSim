@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strings"
 )
 
 type Deck struct {
@@ -133,6 +134,16 @@ func (d *DeckModel) GetDeckWithCards(id int) (Deck, error) {
 
 	}
 
+	cardMap := map[string][]Card{
+		"Artifact":     {},
+		"Creature":     {},
+		"Enchantment":  {},
+		"Instant":      {},
+		"Land":         {},
+		"Planeswalker": {},
+		"Sorcery":      {},
+	}
+
 	for rows.Next() {
 		var card Card
 		err = rows.Scan(&card.ID, &card.Name, &card.Image_uri, &card.Mana_cost, &card.Type__line, &card.Power, &card.Toughness, &card.Ability, &card.CMC, &card.Cropped_uri)
@@ -144,6 +155,33 @@ func (d *DeckModel) GetDeckWithCards(id int) (Deck, error) {
 			}
 		}
 		deck.Cards = append(deck.Cards, card)
+
+		switch {
+		case strings.Contains(card.Type__line, "Creature"):
+			cardMap["Creature"] = append(cardMap["Creature"], card)
+		case strings.Contains(card.Type__line, "Artifact"):
+			cardMap["Artifact"] = append(cardMap["Artifact"], card)
+		case strings.Contains(card.Type__line, "Enchantment"):
+			cardMap["Enchantment"] = append(cardMap["Enchantment"], card)
+		case strings.Contains(card.Type__line, "Instant"):
+			cardMap["Instant"] = append(cardMap["Instant"], card)
+		case strings.Contains(card.Type__line, "Land"):
+			cardMap["Land"] = append(cardMap["Land"], card)
+		case strings.Contains(card.Type__line, "Planeswalker"):
+			cardMap["Planeswalker"] = append(cardMap["Planeswalker"], card)
+		case strings.Contains(card.Type__line, "Sorcery"):
+			cardMap["Sorcery"] = append(cardMap["Sorcery"], card)
+
+		}
+		// cardMap[card.Type__line] = append(cardMap[card.Type__line], card)
+	}
+
+	for k, v := range cardMap {
+		fmt.Print(k + " ")
+		for _, v2 := range v {
+			fmt.Print(v2.Name + ", ")
+		}
+		fmt.Println("\n")
 	}
 
 	var card Card
