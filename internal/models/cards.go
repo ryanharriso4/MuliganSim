@@ -25,7 +25,7 @@ func (c *CardModel) GetByName(name string) ([]Card, error) {
 
 	var cards []Card
 
-	stmt := "select name, id, medimage_url from cardlist where name like '%" + name + "%'"
+	stmt := "select name, id, medimage_url, type_line from cardlist where name like '%" + name + "%'"
 	rows, err := c.DB.Query(stmt)
 
 	if err != nil {
@@ -34,7 +34,7 @@ func (c *CardModel) GetByName(name string) ([]Card, error) {
 
 	for rows.Next() {
 		var card Card
-		err := rows.Scan(&card.Name, &card.ID, &card.Image_uri)
+		err := rows.Scan(&card.Name, &card.ID, &card.Image_uri, &card.Type__line)
 		if err != nil {
 			return cards, err
 		}

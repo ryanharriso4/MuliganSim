@@ -66,13 +66,33 @@ async function displaySearch(e){
                 image.classList.add("card-image")  
                 image.setAttribute("data-src", item.imageuri)
                 image.alt = item.name
+                const type = item.typeline
+                if (type.includes('Creature')){
+                    image.setAttribute("data-trgtloc", "Creature")
+                } else if (type.includes("Artifact")){
+                    image.setAttribute("data-trgtloc", "Artifact")
+                } else if (type.includes("Enchantment")){
+                    image.setAttribute("data-trgtloc", "Enchantment")
+                } else if (type.includes("Instant")){
+                    image.setAttribute("data-trgtloc", "Instant")
+                } else if (type.includes("Land")){
+                    image.setAttribute("data-trgtloc", "Land")
+                } else if (type.includes("Planeswalker")){
+                    image.setAttribute("data-trgtloc", "Planeswalker")
+                } else if (type.includes("Sorcery")){
+                    image.setAttribute("data-trgtloc", "Sorcery")
+                }
                 lazyLoad(image)
+
+                
 
                 //Button for adding card to deck
                 const deckAdd = document.createElement("input")
                 deckAdd.classList.add("add-card") 
                 deckAdd.type = "image"
                 deckAdd.src = "/static/img/add.png"
+                
+                
 
                 deckAdd.addEventListener('click', addToDeck)
 
@@ -143,12 +163,16 @@ function addToDeck(e){
     newimg.width = 146;
     newimg.height = 204;
     newimg.classList.add("deck-card-image")
+    
+    const loc = img.getAttribute("data-trgtloc")
+    const segment = document.querySelector(`#${loc}`)
+
 
     card.append(del)
     card.append(commander)
     card.append(newimg)
     lazyLoad(card)
-    deckGrid.appendChild(card)
+    segment.appendChild(card)
 
     
     

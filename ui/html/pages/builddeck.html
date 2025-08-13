@@ -42,7 +42,7 @@
                 {{range $key, $value := .Deck.Cards}}
                     <div class = "display-deck-divider">
                     <p>{{$key}}</p>
-                    <div class = "display-deck-segment">
+                    <div class = "display-deck-segment" id = {{$key}}>
                         {{range $key2, $value2 := $value}}
                             <div  class = "deck-card" data-index = {{$value2.ID}}>
                                 <img  class = "deck-card-image"src="" data-src = {{$value2.Image_uri}}  alt={{$value2.Name}}> 
