@@ -23,6 +23,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /cards/search/{name}", authenticated.ThenFunc(app.search))
 	mux.Handle("PUT /cards/save", authenticated.ThenFunc(app.saveDeck))
 	mux.Handle("GET /cards/builddeck/{deckID}", deckAuth.ThenFunc(app.buildDeck))
+	mux.Handle("DELETE /cards/deleteDeck/{deckID}", deckAuth.ThenFunc(app.deleteDeck))
 
 	//Routes for user auth
 	mux.Handle("GET /users/signup", dynamic.ThenFunc(app.signup))

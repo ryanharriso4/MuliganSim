@@ -3,6 +3,8 @@ const searchResults = document.querySelector("div.search-results")
 const deckGrid = document.querySelector("div.display-deck")
 const save = document.querySelector("button.save")
 
+const del = document.querySelector("button.deleteDeck")
+
 const deckAdd = []
 const deckRemove = []
 
@@ -24,8 +26,11 @@ const lazyLoad = target => {
     io.observe(target)
 }
 
-const cards = deckGrid.querySelectorAll(".deck-card-image")
-cards.forEach(lazyLoad)
+if(deckGrid != null){
+    const cards = deckGrid.querySelectorAll(".deck-card-image")
+    cards.forEach(lazyLoad)
+}
+
 
 if (cardSearch != null) {
     cardSearch.addEventListener('keypress', displaySearch)
@@ -39,7 +44,9 @@ if (save != null){
     save.addEventListener('click', saveDeck)
 }
 
- 
+ if (del != null){
+    del.addEventListener('click', deleteClick)
+ }
 
 
 
@@ -191,7 +198,7 @@ function deckClick(e){
         const index = deckAdd.indexOf(value)
         if (index != -1){
             console.log(deckAdd)
-            addToDeck = deckAdd.splice(index, 1)
+            deckAdd.splice(index, 1)
             console.log(deckAdd)
         } else {
             deckRemove.push(value)
@@ -212,33 +219,25 @@ function deckClick(e){
             
             deckAdd.push(comIndex)
             previousCom.classList.remove("commander")
-        }else{
-            console.log("not found")
         }
         
         const card = e.target.parentNode;
-        card.classList.add("commander")
+        
 
-        let comIndex = 0
         if (card != null){
             let comIndex = 0
+            card.classList.add("commander")
             let temp = card.getAttribute("data-index")
             comIndex = parseInt(temp)
             if (isNaN(comIndex)){
-                comIndex = 0
+                console.log("NAN")
+                return
             }
 
             const index = deckAdd.indexOf(comIndex)
             if (index != -1){
-                addToDeck = deckAdd.splice(index, 1)
+                deckAdd.splice(index, 1)
             }
-
-            const ComBeforeCom = deckGrid.querySelector("div.deck-card[data-index='${comIndex}']")
-            if (ComBeforeCom != null){
-                deckGrid.remove(ComBeforeCom)
-            }
-
-            
         }
     }
     
@@ -303,4 +302,18 @@ async function saveDeck(e){
 
 }
 
+function deleteClick(e){
+    if (confirm("Are you sure you want to delete this deck?") == true){
+        
+        const id = deckGrid.getAttribute("data-index")
+        try{
+            fetch(`/cards/deleteDeck/${id}`, {
+            method: 'Delete'})
+            window.location.href ="https://localhost:4000/home"
+        } catch(error){
+            console.log(error)
+            window.alert("Delete Unsuccsessful")
+        }
+    }
+}
 

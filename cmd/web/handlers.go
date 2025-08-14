@@ -62,9 +62,40 @@ func (app *application) buildDeck(w http.ResponseWriter, r *http.Request) {
 		data.Deck = deck
 	} else {
 		data.Deck.DeckID = -1
+		cardMap := map[string][]models.Card{
+			"Artifact":     {},
+			"Creature":     {},
+			"Enchantment":  {},
+			"Instant":      {},
+			"Land":         {},
+			"Planeswalker": {},
+			"Sorcery":      {},
+		}
+		data.Deck.Cards = cardMap
 	}
 
 	app.render(w, r, http.StatusOK, "builddeck.html", data)
+}
+
+func (app *application) deleteDeck(w http.ResponseWriter, r *http.Request) {
+	deckID, err := strconv.Atoi(r.PathValue("deckID"))
+	if err != nil {
+		app.serverError(w, r, err)
+	}
+
+	if deckID == -1 {
+		http.Error(w, "Cannot delete a new deck", http.StatusBadRequest)
+		return
+	}
+
+	err = app.decks.DeleteDeck(deckID, r.Context())
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	w.WriteHeader(204)
+
 }
 
 func (app *application) search(w http.ResponseWriter, r *http.Request) {

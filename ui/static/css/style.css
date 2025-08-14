@@ -294,6 +294,7 @@ li a:hover{
 .display-deck-divider{
     font-size: 2rem;
     font-weight: bold;
+    flex: 0 0 100%;
 }
 
 .display-deck-segment{
@@ -353,6 +354,18 @@ li a:hover{
     background-position: center;
     background-size: cover;
 
+}
+
+.deleteDeck{
+    border: none; 
+    background: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 1rem;
+    background-color: #31363F;
+    background-image: url("/static/img/deleteblue.png");
+    background-position: center;
+    background-size: cover;
 }
 
 .nameAndBack input{

@@ -320,3 +320,52 @@ func (d *DeckModel) SaveDeckChanges(ctx context.Context, deck SaveDeck, userID i
 
 	return deck.DeckID, nil
 }
+
+func (d *DeckModel) DeleteDeck(deckID int, ctx context.Context) error {
+
+	tx, err := d.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	stmt, err := tx.PrepareContext(ctx, "delete from deck_card where deck_id = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.ExecContext(ctx, deckID)
+	if err != nil {
+		return err
+	}
+
+	stmt2, err := tx.PrepareContext(ctx, "delete from user_deck where deck_id = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt2.Close()
+
+	_, err = stmt2.ExecContext(ctx, deckID)
+	if err != nil {
+		return err
+	}
+
+	stmt3, err := tx.PrepareContext(ctx, "delete from deck where id = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt3.Close()
+
+	_, err = stmt3.ExecContext(ctx, deckID)
+	if err != nil {
+		return err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
