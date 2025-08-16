@@ -12,4 +12,6 @@ var (
 	ErrDuplicateEmail = errors.New("models: duplicate email")
 
 	ErrInvalidDeckID = errors.New("decks: invalid id")
+
+	ErrHitDeckLimit = errors.New("decks: deck limit reached")
 )

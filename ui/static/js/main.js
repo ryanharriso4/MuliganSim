@@ -140,11 +140,9 @@ function addToDeck(e){
         return
     }
 
+    const oldCard = deckGrid.querySelector(`div.deck-card[data-index='${di}']`)
 
-    if (deckGrid.querySelector(`div.deck-card[data-index='${di}']`) != null){
-        return
-
-    }
+   
 
 
 
@@ -152,6 +150,7 @@ function addToDeck(e){
     const card = document.createElement("div")
     card.setAttribute("data-index", this.parentNode.getAttribute("data-index"))
     card.classList.add("deck-card")
+   
 
     const del = document.createElement("input")
     del.classList.add("delete-card") 
@@ -244,7 +243,6 @@ function deckClick(e){
 }
 
 async function saveDeck(e){
-    const deckGrid = document.querySelector('.display-deck')
     const items = deckGrid.querySelectorAll('div.deck-card:not(.commander)')
     const deckName = document.querySelector('input.deck-name')
 

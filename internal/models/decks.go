@@ -207,6 +207,17 @@ func (d *DeckModel) SaveDeckChanges(ctx context.Context, deck SaveDeck, userID i
 	}
 	defer tx.Rollback()
 
+	stmt := "select count(*) from user_deck where user_id = ?"
+	err = d.DB.QueryRow(stmt, userID).Scan(&result)
+
+	if err != nil {
+		return -1, err
+	}
+
+	if result >= 10 {
+		return -1, ErrHitDeckLimit
+	}
+
 	if deck.DeckID == -1 {
 		stmt, err := tx.PrepareContext(ctx, "insert into deck(name) values(?)")
 		if err != nil {

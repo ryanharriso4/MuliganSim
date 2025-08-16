@@ -138,6 +138,8 @@ func (app *application) saveDeck(w http.ResponseWriter, r *http.Request) {
 		var mr *malformedRequest
 		if errors.As(err, &mr) {
 			http.Error(w, mr.msg, mr.status)
+		} else if errors.Is(err, models.ErrHitDeckLimit) {
+			http.Error(w, models.ErrDuplicateEmail.Error(), http.StatusForbidden)
 		} else {
 			log.Print(err.Error())
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
